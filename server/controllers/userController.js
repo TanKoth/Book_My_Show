@@ -37,4 +37,17 @@ const userLogin = async(req,res) => {
   }
 }
 
-module.exports = { createUser, userLogin };
+const getCurrentUser = async (req, res) => {
+  console.log('Header:', req.headers.authorization);
+  try {
+    const user = await userModel.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.send({ success: true, message: "You are Authorized", data: user });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message });
+  }
+};
+
+module.exports = { createUser, userLogin, getCurrentUser };
