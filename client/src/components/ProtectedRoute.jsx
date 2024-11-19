@@ -43,7 +43,11 @@ const ProtectedRoute = ({ children }) => {
   const navItems = [
     {
       key: "1",
-      label: "Home",
+      label: (
+        <Link to="/" onClick={() => navigate("/")}>
+          Home
+        </Link>
+      ),
       icon: <HomeOutlined />,
     },
     {
@@ -103,7 +107,11 @@ const ProtectedRoute = ({ children }) => {
               alignItems: "center",
             }}
           >
-            <h3 className="text-white m-0">Book My Show</h3>
+            <h3 className="text-white m-0">
+              <Link to="/" className="text-white m-0">
+                Book My Show
+              </Link>
+            </h3>
             <Menu theme="dark" mode="horizontal" items={navItems}></Menu>
           </Header>
           <div>{children}</div>

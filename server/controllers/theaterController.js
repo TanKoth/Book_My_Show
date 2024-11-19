@@ -13,9 +13,9 @@ const Theater = require("../models/theaterModel")
  }
 
 
- const getAllTheaters =async (re,res) => {
+ const getAllTheatersForAdmin =async (re,res) => {
   try{
-    const allTheaters = await Theater.find()
+    const allTheaters = await Theater.find().populate("owner")
     if(!allTheaters){
       return res.status(400).json({success:false,message:"Cannot find theater data"})
     }else{
@@ -26,22 +26,33 @@ const Theater = require("../models/theaterModel")
   }
  }
 
- const updateTheater = async(req,res) =>{
-  try{
-    const updateTheater = await Theater.findByIdandUpdate(req.params.theaterId, req.body)
-    if(!updateTheater){
-      return res.status(400).json({success:false,message:"Cannot update theater data"})
-    }else{
-      return res.status(200).json({success:true,message:"Theater updated successfully",data:updateTheater})
-    }
-  }catch(err){
-    return res.status(500).json({success:false,message:err.message})
+ const getAllTheaters = async(req,res) => {
+  try {
+    const ownerId = req.params.ownerId;
+    const allTheaters = await Theater.find({ owner: ownerId });
+    res.send({
+      success: true,
+      message: "All theaters fetched successfully",
+      data: allTheaters,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
  }
 
+ const updateTheater = async(req,res) =>{
+  try{
+    const updateTheater = await Theater.findByIdAndUpdate(req.params.theaterId,req.body,{new:true})
+      return res.status(200).json({success:true,message:"Movie updated successfully",data:updateTheater})
+  }catch(err){
+    return res.status(400).json({success:false,message:err.message})
+  }
+}
+ 
+
  const deleteTheater = async (req,res) =>{
   try{
-    const deleteTheater = await Theater.findByIdandDelete(req.params.theaterId)
+    const deleteTheater = await Theater.findByIdAndDelete(req.params.theaterId)
     if(!deleteTheater){
       return res.status(400).json({success:false,message:"Cannot delete theater data"})
     }else{
@@ -52,4 +63,4 @@ const Theater = require("../models/theaterModel")
   }
  }
 
- module.exports = {createTheater,getAllTheaters,updateTheater,deleteTheater}
+ module.exports = {createTheater,getAllTheatersForAdmin,updateTheater,deleteTheater, getAllTheaters}

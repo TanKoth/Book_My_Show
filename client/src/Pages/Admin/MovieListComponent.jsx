@@ -128,6 +128,7 @@ const MovieList = () => {
   return (
     <div className="d-flex justiy-content-end">
       <Button
+        type="primary"
         onClick={() => {
           setIsModalOpen(true);
           setFormType("add");
