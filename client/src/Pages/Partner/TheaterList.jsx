@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import TheaterFormModal from "./TheaterFormModal";
 import DeleteTheaterModal from "./DeleteTheaterModal";
 import { getAllTheatres } from "../../api/theater";
+import ShowModal from "./ShowModal";
 
 const TheaterList = () => {
   const dispatch = useDispatch();
@@ -137,6 +138,13 @@ const TheaterList = () => {
           selectedTheater={selectedTheater}
           setSelectedTheater={setSelectedTheater}
           getData={getData}
+        />
+      )}
+      {isShowModalOpen && (
+        <ShowModal
+          isShowModalOpen={isShowModalOpen}
+          setIsShowModalOpen={setIsShowModalOpen}
+          selectedTheater={selectedTheater}
         />
       )}
     </div>

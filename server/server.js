@@ -5,6 +5,7 @@ const app = express()
 const userRouter = require('./routes/userRoute')
 const movieRouter = require('./routes/movieRoute')
 const theaterRouter = require("./routes/theaterRoute")
+const showRouter = require("./routes/showRoute")
 
 require("dotenv").config();
 const connectDB = require('./config/db')
@@ -16,6 +17,7 @@ app.use(express.json())
 app.use('/api/users',userRouter)
 app.use('/api/movies',movieRouter)
 app.use("/api/theaters",theaterRouter)
+app.use("/api/shows",showRouter)
 
 app.listen(8081,() =>{
     console.log('Server is running on port 8081')
