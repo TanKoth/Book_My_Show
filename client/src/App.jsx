@@ -1,6 +1,6 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+// import { useState } from "react";
+// import reactLogo from "./assets/react.svg";
+// import viteLogo from "/vite.svg";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home/index.jsx";
@@ -12,6 +12,7 @@ import store from "./redux/store.jsx";
 import Admin from "./Pages/Admin/index.jsx";
 import Partner from "./Pages/Partner/index.jsx";
 import Profile from "./Pages/User/index.jsx";
+import SingleMovie from "./Pages/Home/SingleMovie.jsx";
 
 function App() {
   return (
@@ -49,6 +50,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/movie/:id"
+            element={
+              <ProtectedRoute>
+                <SingleMovie />
               </ProtectedRoute>
             }
           ></Route>

@@ -21,9 +21,9 @@ import { useEffect, useState } from "react";
 // import { useSelector } from 'react-redux';
 import { getAllMovies } from "../../api/movie";
 import {
-  addShow,
+  createShow,
   deleteShow,
-  getShowsByTheater,
+  getShowsBytheater,
   updateShow,
 } from "../../api/show";
 import moment from "moment";
@@ -34,7 +34,7 @@ const ShowModal = ({
   selectedTheater,
 }) => {
   const [view, setView] = useState("table"); // vew can be table, add, edit
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [shows, setShows] = useState(null);
   const [selectedShow, setSelectedShow] = useState(null);
@@ -49,53 +49,39 @@ const ShowModal = ({
       } else {
         message.error(movieResponse.message);
       }
+
+      const showResponse = await getShowsBytheater({
+        theaterId: selectedTheater._id,
+      });
+      if (showResponse.success) {
+        setShows(showResponse.data);
+      } else {
+        message.error(showResponse.message);
+      }
+
+      dispatch(HideLoading());
     } catch (err) {
       message.error(err.message);
-    } finally {
       dispatch(HideLoading());
     }
   };
-
-  const fetchShows = async () => {
-    try {
-      dispatch(ShowLoading());
-      const response = await getShowsByTheater(selectedTheater._id);
-      console.log("Showresponse", response);
-      if (response.success) {
-        setShows(response.data);
-      } else {
-        message.error(response.message);
-      }
-    } catch (error) {
-      message.error(error.message);
-    } finally {
-      dispatch(HideLoading());
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-  useEffect(() => {
-    if (selectedTheater) {
-      fetchShows();
-    }
-  }, []);
 
   const onFinish = async (values) => {
-    console.log("values", values);
+    console.log("Values of new Show", values);
     try {
       dispatch(ShowLoading());
       let response = null;
       if (view === "add") {
-        response = await addShow({ ...values, theaterId: selectedTheater._id });
+        response = await createShow({
+          ...values,
+          theaterId: selectedTheater._id,
+        });
       } else {
         // console.log(view, selectedTheater, selectedTheater._id);
-        console.log("selectedShow", selectedShow);
         response = await updateShow({
           ...values,
           showId: selectedShow._id,
-          theaterId: selectedTheater._id,
+          theater: selectedTheater._id,
         });
       }
       if (response.success) {
@@ -117,11 +103,9 @@ const ShowModal = ({
   };
 
   const handleDelete = async (showId) => {
-    console.log("showId", showId);
     try {
       dispatch(ShowLoading());
       const response = await deleteShow({ showId: showId });
-      console.log("DeleteResponse", response);
       if (response.success) {
         message.success(response.message);
         getData();
@@ -144,8 +128,9 @@ const ShowModal = ({
     {
       title: "Show Date",
       dataIndex: "date",
-      render: (text) => {
-        return moment(text).format("MMM Do YYYY");
+      render: (text, data) => {
+        console.log("Date:", data);
+        return moment(data.date).format("MM-DD-YYYY");
       },
     },
     {
@@ -159,13 +144,14 @@ const ShowModal = ({
       title: "Movie",
       dataIndex: "movie",
       render: (text, data) => {
+        console.log("Moviedata", data);
         return data.movie ? data.movie.name : "N/A";
       },
     },
     {
       title: "Ticket Price",
       dataIndex: "price",
-      key: "ticketPrice",
+      key: "key",
     },
     {
       title: "Total Seats",
@@ -188,12 +174,13 @@ const ShowModal = ({
             <Button
               onClick={() => {
                 setView("edit");
-                setSelectedMovie(data);
+                setSelectedMovie(data.movie);
                 setSelectedShow({
                   ...data,
                   date: moment(data.date).format("YYYY-MM-DD"),
+                  movie: data.movie._id,
                 });
-                console.log(selectedMovie && selectedMovie.title);
+                // console.log("Selected Movies: ", selectedMovie);
               }}
             >
               <EditOutlined />
@@ -216,10 +203,14 @@ const ShowModal = ({
     },
   ];
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <Modal
       centered
-      title={selectedTheater ? selectedTheater.name : "Loading...."}
+      title={selectedTheater.name}
       open={isShowModalOpen}
       onCancel={handleCancel}
       width={1200}
@@ -246,7 +237,7 @@ const ShowModal = ({
           className=""
           layout="vertical"
           style={{ width: "100%" }}
-          defaultValue={view === "edit" ? selectedShow : null}
+          initialValues={view === "edit" ? selectedShow : null}
           onFinish={onFinish}
         >
           <Row
@@ -339,12 +330,12 @@ const ShowModal = ({
                     <Select
                       id="movie"
                       placeholder="Select Movie"
-                      defaultValue={selectedMovie && selectedMovie.name}
+                      defaultValue={selectedMovie && selectedMovie.title}
                       style={{ width: "100%", height: "45px" }}
                       options={movies.map((movie) => ({
                         key: movie._id,
-                        value: movie.name,
-                        label: movie.title,
+                        value: movie._id,
+                        label: movie.name,
                       }))}
                     />
                   </Form.Item>
