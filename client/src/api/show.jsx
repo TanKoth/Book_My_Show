@@ -48,7 +48,7 @@ export const deleteShow = async (payload) => {
   }
 };
 
-export const getAlltheatersByMovie = async ({ movieId, date }) => {
+export const getAlltheatersByMovie = async (movieId, date) => {
   try {
     const response = await axiosInstance.get(
       `/api/shows/getAllTheatersByMovie/${movieId}/${date}`

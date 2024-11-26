@@ -13,6 +13,7 @@ import Admin from "./Pages/Admin/index.jsx";
 import Partner from "./Pages/Partner/index.jsx";
 import Profile from "./Pages/User/index.jsx";
 import SingleMovie from "./Pages/Home/SingleMovie.jsx";
+import BookShow from "./Pages/Home/BookShow.jsx";
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SingleMovie />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/bookShow/:id"
+            element={
+              <ProtectedRoute>
+                <BookShow />
               </ProtectedRoute>
             }
           ></Route>
