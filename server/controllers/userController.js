@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken')
 const EmailHelper = require('../utils/emailHelper');
+const bcrypt = require('bcryptjs');
 
 const createUser = async (req, res) => {
   try {
@@ -10,7 +11,12 @@ const createUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "User already exists" });
       
     } else {
-      const user = new userModel(req.body);
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      const user = new userModel({
+        ...req.body, password: hashedPassword
+      })
+      //const user = new userModel(req.body);
       await user.save();
       res.status(200).json({ success: true, message: "User created Successfully" });
     }
@@ -26,7 +32,11 @@ const userLogin = async(req,res) => {
     if(!user){
       return res.status(400).json(({success:false,message:"User not found"}))
     }
-    if(req.body.password !== user.password){
+    // if(req.body.password !== user.password){
+    //   return res.status(400).json({success:false, message:"Invalid password"})
+    // }
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    if(!isMatch){
       return res.status(400).json({success:false, message:"Invalid password"})
     }else{
       const token = jwt.sign ({userId:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
