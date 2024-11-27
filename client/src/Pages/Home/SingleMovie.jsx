@@ -89,7 +89,7 @@ const SingleMovie = () => {
               </p>
               <p className="movie-data">
                 Release Date:{" "}
-                <span>{moment(movie.date).format("MM-DD-YYYY")}</span>
+                <span>{moment(movie.date).format("YYYY-MM-DD")}</span>
               </p>
               <p className="movie-data">
                 Duration: <span>{movie.duration} Minutes</span>
