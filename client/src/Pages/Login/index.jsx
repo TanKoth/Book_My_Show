@@ -108,6 +108,9 @@ const Login = () => {
                   <p>
                     New User? <Link to={"/register"}>Register</Link>
                   </p>
+                  <p>
+                    Forget Password? <Link to={"/forget"}>Click Here</Link>
+                  </p>
                 </div>
               </Form>
             </section>

@@ -1,8 +1,9 @@
 const bookingModel = require('../models/bookingModel');
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 //const stripeKey = process.env.STRIPE_SECRET_KEY;
-const stripe = require('stripe')('process.env.STRIPE_SECRET_KEY');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const showModel = require('../models/showModel');
+const movieTicketEmail = require('../utils/movieTicketEmail');
 
 const makePayment = async (req,res) =>{
 
@@ -68,6 +69,26 @@ const getAllBookings = async (req,res) =>{
       }
     });
     console.log('Confirm bookings: ',bookings);
+    if (bookings.length === 0) {
+      return res.status(400).json({ success: false, message: "No bookings found" });
+    }
+
+    // Log the bookings array for debugging
+    console.log("Bookings:", bookings);
+
+    // Use the most recent booking to send the email
+    const recentBooking = bookings[bookings.length - 1];
+
+    await movieTicketEmail("ticketConfirm.html", recentBooking.user.email, {
+      name: recentBooking.user.name,
+      movie: recentBooking.show.movie.name,
+      theater: recentBooking.show.theater.name,
+      date: recentBooking.show.date,
+      time: recentBooking.show.time,
+      seats: recentBooking.seats,
+      amount: recentBooking.seats.length * recentBooking.show.price,
+      transactionId: recentBooking.transactionId
+    });
     return res.status(200).json({success:true,message:"All bookings fetched successfully",data:bookings})
   }catch(err){
     return res.status(500).json({success:false,message:err.message})
