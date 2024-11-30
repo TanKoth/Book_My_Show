@@ -112,13 +112,19 @@ const resetPassword = async (req, res) => {
         .status(401)
         .json({ success: false, message: "OTP has expired"});
     }
-    user.password = resetDetails.password;
+    if(user.otp !== resetDetails.otp){
+      return res.status(401).json({success:false,message:"Invalid OTP"})
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(resetDetails.password, saltRounds);
+    user.password = hashedPassword;
     user.otp = undefined;
     user.otpExpiry = undefined;
 
     await user.save();
 
-    res
+   return res
       .status(200)
       .json({ success: true, message: "Password reset successful",data:user });
   } catch (err) {
