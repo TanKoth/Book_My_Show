@@ -10,13 +10,27 @@ const movieRouter = require('./routes/movieRoute')
 const theaterRouter = require("./routes/theaterRoute")
 const showRouter = require("./routes/showRoute")
 const bookingRouter = require("./routes/bookingRoute")
+const path  = require('path')
 
 
 require("dotenv").config();
 const connectDB = require('./config/db')
 connectDB();
 
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+const clientBuildPath = path.join(__dirname, "../client/dist");
+console.log("client path", clientBuildPath);
+
+app.use(express.static(clientBuildPath));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(clientBuildPath, "index.html"));
+});
+
 app.use(express.json())
 const limiter = rateLimiter({
     windowMs: 15 * 60 * 1000,
