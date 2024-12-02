@@ -11,6 +11,7 @@ const theaterRouter = require("./routes/theaterRoute")
 const showRouter = require("./routes/showRoute")
 const bookingRouter = require("./routes/bookingRoute")
 const path  = require('path')
+const port = process.env.PORT || 8081
 
 
 require("dotenv").config();
@@ -49,6 +50,6 @@ app.use("/api/theaters",theaterRouter)
 app.use("/api/shows",showRouter)
 app.use("/api/bookings",bookingRouter)
 
-app.listen(8081,() =>{
+app.listen(port,() =>{
     console.log('Server is running on port 8081')
 })
