@@ -51,8 +51,8 @@ Book My Show is a web application for booking movie tickets. It consists of a cl
 - MongoDB
 
 ### Clone the repository
-- git clone https://github.com/yourusername/book-my-show.git
-- cd book-my-show
+- https://github.com/TanKoth/Book_My_Show.git
+- cd Book_My_Show
 
 ### Client
 - cd client
@@ -101,7 +101,6 @@ Book My Show is a web application for booking movie tickets. It consists of a cl
 - Contributions are welcome! Please open an issue or submit a pull request for any changes.
 
 ### License
-This project is licensed under the MIT License.
+- This project is licensed under the MIT License.
 
-### 
-This `README.md` file provides a comprehensive overview of your project, including features, technologies, installation instructions, usage, API endpoints, environment variables, and more. Adjust the content as needed to fit your specific project details.
+- This `README.md` file provides a comprehensive overview of your project, including features, technologies, installation instructions, usage, API endpoints, environment variables, and more. Adjust the content as needed to fit your specific project details.
