@@ -17,19 +17,21 @@ require("dotenv").config();
 const connectDB = require('./config/db')
 connectDB();
 
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(cors());
 
-const clientBuildPath = path.join(__dirname, "../client/dist");
-console.log("client path", clientBuildPath);
+// app.use(cors({
+//     origin: "*",
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 
-app.use(express.static(clientBuildPath));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(clientBuildPath, "index.html"));
-});
+// const clientBuildPath = path.join(__dirname, "../client/dist");
+// console.log("client path", clientBuildPath);
+
+// app.use(express.static(clientBuildPath));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(clientBuildPath, "index.html"));
+// });
 
 app.use(express.json())
 const limiter = rateLimiter({
