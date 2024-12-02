@@ -50,7 +50,7 @@ Book My Show is a web application for booking movie tickets. It consists of a cl
 - Node.js
 - MongoDB
 
-### Clone the repository
+## Clone the repository
 
 - https://github.com/TanKoth/Book_My_Show.git
 - cd Book_My_Show
